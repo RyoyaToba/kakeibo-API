@@ -53,6 +53,9 @@ docker-compose up
 ```
 
 ## API Specification
+
+The API definition is written using OpenAPI. Please check the specifications using Swagger Editor.
+
 [openAPI.yml](./api/openAPI.yml)  
 [Swagger Editor](https://editor.swagger.io/)
 
