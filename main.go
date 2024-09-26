@@ -1,48 +1,49 @@
+// main.go
+
 package main
 
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
+	usecase "your-project/api/application"
+	"your-project/api/interface/handler"
+	"your-project/api/repository"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
-func getMessage(w http.ResponseWriter, r *http.Request) {
-	// URLのパスパラメータを取得
-	vars := mux.Vars(r)
-	id := vars["id"]
+// MySQLデータベースの接続情報
+const (
+	dsn = "root:rootpassword@tcp(mysql:3306)/testdb"
+)
 
+func main() {
 	// MySQLに接続
-	db, err := sql.Open("mysql", "root:rootpassword@tcp(mysql:3306)/testdb")
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		http.Error(w, "Database connection error", http.StatusInternalServerError)
-		return
+		panic(fmt.Sprintf("Database connection error: %v", err))
 	}
 	defer db.Close()
 
-	var message string
-	err = db.QueryRow("SELECT message FROM test WHERE id = ?", id).Scan(&message)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			http.Error(w, "Message not found", http.StatusNotFound)
-		} else {
-			http.Error(w, "Query error", http.StatusInternalServerError)
-		}
-		return
+	// RepositoryとUsecaseの初期化
+	messageRepo := repository.NewMySQLMessageRepository(db)
+	messageUsecase := usecase.NewMessageUsecase(messageRepo)
+
+	// Handlerの初期化
+	messageHandler := handler.NewMessageHandler(messageUsecase)
+
+	// Ginのルーターを初期化
+	router := gin.Default()
+
+	// ルートを設定
+	router.GET("/v1/getmessage/:id", messageHandler.GetMessage)
+
+	// サーバーを起動
+	httpServer := &http.Server{
+		Addr:    ":8080",
+		Handler: router,
 	}
-
-	// メッセージを返す
-	fmt.Fprintf(w, "Message: %s", message)
-}
-
-func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/v1/getmessage/{id}", getMessage).Methods("GET")
-
-	// サーバーを8080ポートで起動
-	log.Println("Server running on port 8080")
-	http.ListenAndServe(":8080", r)
+	httpServer.ListenAndServe()
 }
