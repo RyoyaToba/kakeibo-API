@@ -52,3 +52,9 @@ docker-compose up
 ## API Specification
 [openAPI.yml](./api/openAPI.yml)  
 [Swagger Editor](https://editor.swagger.io/)
+
+## What is Layered Architecture?
+
+Please refer to the following for details on the layered architecture.
+
+[今すぐ「レイヤードアーキテクチャ+DDD」を理解しよう。（golang）](https://qiita.com/tono-maron/items/345c433b86f74d314c8d)
