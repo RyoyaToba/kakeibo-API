@@ -1,8 +1,10 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  web:
-    build: .
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile  # 新しいDockerfileのパス
     ports:
       - "8080:8080"
     depends_on:
@@ -11,8 +13,7 @@ services:
   mysql:
     build:
       context: ./mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: testdb
     ports:
       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
