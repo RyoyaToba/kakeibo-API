@@ -47,3 +47,8 @@ docker-compose up
     ├── Dockerfile
     └── init.sql
 ```
+
+## API
+```
+/v1/getmessage/{id}
+```
