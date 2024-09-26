@@ -50,4 +50,4 @@ docker-compose up
 ```
 
 ## API
-
+[openAPI](./api/openAPI.yml)
