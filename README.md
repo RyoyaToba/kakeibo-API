@@ -4,7 +4,7 @@ This repository was created for learning the Go programming language. It impleme
 
 I will implement using tools like Docker and Docker Compose, as well as the layered architecture of Go.
 
-## nvironment Setup
+## Environment Setup
 
 #### go install
 ```
