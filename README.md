@@ -50,4 +50,5 @@ docker-compose up
 ```
 
 ## API
-[openAPI](./api/openAPI.yml)
+[openAPI.yml](./api/openAPI.yml)  
+[Swagger Editor](https://editor.swagger.io/)
