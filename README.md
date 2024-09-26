@@ -27,3 +27,23 @@ docker-compose build --no-cache
 docker-compose up
 ```
 
+## ディレクトリ構成
+
+```
+.
+├── Dockerfile
+├── README.md
+├── api
+│   ├── application
+│   ├── interface
+│   └── repository
+├── doc
+│   └── 初期化スクリプトについて.md
+├── docker-compose.yaml
+├── go.mod
+├── go.sum
+├── main.go
+└── mysql
+    ├── Dockerfile
+    └── init.sql
+```
