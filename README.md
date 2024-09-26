@@ -10,6 +10,9 @@ I will implement using tools like Docker and Docker Compose, as well as the laye
 ```
 # go install
 brew go install
+
+# install check
+go version
 ```
 #### docker install
 ```
