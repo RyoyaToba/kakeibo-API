@@ -2,6 +2,8 @@
 
 This repository was created for learning the Go programming language. It implements a simple API using Gin.
 
+I will implement using tools like Docker and Docker Compose, as well as the layered architecture of Go.
+
 ## 環境構築
 
 #### go install
