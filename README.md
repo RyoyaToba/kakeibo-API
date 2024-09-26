@@ -1,10 +1,10 @@
-## 説明
+## Description
 
 This repository was created for learning the Go programming language. It implements a simple API using Gin.
 
 I will implement using tools like Docker and Docker Compose, as well as the layered architecture of Go.
 
-## 環境構築
+## nvironment Setup
 
 #### go install
 ```
@@ -27,7 +27,7 @@ docker-compose build --no-cache
 docker-compose up
 ```
 
-## ディレクトリ構成
+## Directory Structure
 
 ```
 .
@@ -49,6 +49,6 @@ docker-compose up
     └── init.sql
 ```
 
-## API
+## API Specification
 [openAPI.yml](./api/openAPI.yml)  
 [Swagger Editor](https://editor.swagger.io/)
