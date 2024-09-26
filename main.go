@@ -1,12 +1,12 @@
-// main.go
-
 package main
 
 import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	env "your-project/api"
 	usecase "your-project/api/application"
+
 	"your-project/api/interface/handler"
 	"your-project/api/repository"
 
@@ -14,12 +14,13 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// MySQLデータベースの接続情報
-const (
-	dsn = "root:rootpassword@tcp(mysql:3306)/testdb"
-)
-
 func main() {
+	// DBConfigを取得
+	dbConfig := env.LoadDBConfig()
+
+	// MySQLデータベースのDSNを構築
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
+
 	// MySQLに接続
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
