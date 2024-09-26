@@ -1,3 +1,7 @@
+## 説明
+
+This repository was created for learning the Go programming language. It implements a simple API using Gin.
+
 ## 環境構築
 
 #### go install
