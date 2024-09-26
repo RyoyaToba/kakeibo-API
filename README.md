@@ -31,11 +31,12 @@ docker-compose up
 
 ```
 .
-├── Dockerfile
 ├── README.md
 ├── api
+│   ├── Dockerfile
 │   ├── application
 │   ├── interface
+│   ├── openAPI.yml
 │   └── repository
 ├── doc
 │   └── 初期化スクリプトについて.md
@@ -49,6 +50,4 @@ docker-compose up
 ```
 
 ## API
-```
-/v1/getmessage/{id}
-```
+
