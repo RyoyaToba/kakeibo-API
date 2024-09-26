@@ -1,6 +1,6 @@
 ## Description
 
-This repository was created for learning the Go programming language. It implements a simple API using [Gin](https://gin-gonic.com/ja/docs/).
+This repository was created for learning the Go programming language. It implements a simple API using [Gin Framework](https://gin-gonic.com/ja/docs/).
 
 I will implement using tools like Docker and Docker Compose, as well as the layered architecture of Go.
 
