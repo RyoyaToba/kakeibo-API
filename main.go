@@ -36,9 +36,14 @@ func main() {
 	messageHandler := handler.NewMessageHandler(messageUsecase)
 
 	// Ginのルーターを初期化
-	router := gin.Default()
+	router := gin.New()
 
 	// ルートを設定
+	router.GET("/v1/helthCheck", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"check": "ok",
+		})
+	})
 	router.GET("/v1/getmessage/:id", messageHandler.GetMessage)
 
 	// サーバーを起動
