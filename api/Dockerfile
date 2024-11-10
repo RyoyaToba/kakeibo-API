@@ -11,7 +11,7 @@ COPY . .
 RUN go build -o /hello-world-app
 
 # ポート8080を開放
-EXPOSE 8080
+EXPOSE 8081
 
 # アプリケーションを起動
 CMD ["/hello-world-app"]
