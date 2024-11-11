@@ -1,33 +1,24 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"net/http"
-	env "your-project/api"
 	usecase "your-project/api/application"
 	"your-project/api/interface/handler"
+	"your-project/api/interface/router"
 	"your-project/api/repository"
 	"your-project/api/service"
+	"your-project/infra"
 
-	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	// DBConfigを取得
-	dbConfig := env.LoadDBConfig()
 
-	// MySQLデータベースのDSNを構築
-	// dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
-	// postgres用のDSNを構築
-	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
-
-	// postgresに接続
-	db, err := sql.Open("postgres", dsn)
+	// DBのセットアップ
+	db, err := infra.SetupDB()
 	if err != nil {
-		panic(fmt.Sprintf("Database connection error: %v", err))
+		panic(err)
 	}
 	defer db.Close()
 
@@ -43,18 +34,14 @@ func main() {
 	//messageHandler := handler.NewMessageHandler(messageUsecase)
 	userInformationHandler := handler.NewUserInformationHandler(userInfomationUsecase)
 
+	// Handlers構造体にハンドラーをまとめる
+	handlers := &router.Handlers{
+		UserInformationHandler: userInformationHandler,
+		//MessageHandler:         messageHandler,
+	}
+
 	// Ginのルーターを初期化
-	router := gin.New()
-
-	// ルートを設定
-	router.GET("/v1/helthCheck", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"check": "ok",
-		})
-	})
-	//router.GET("/v1/getmessage/:id", messageHandler.GetMessage)
-
-	router.GET("/v1/getUserInfomation/:userId", userInformationHandler.GetUserInfo)
+	router := router.SetRouter(handlers)
 
 	// サーバーを起動
 	httpServer := &http.Server{
