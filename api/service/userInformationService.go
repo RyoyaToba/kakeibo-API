@@ -1,16 +1,18 @@
 package service
 
 import (
+	"database/sql"
 	"your-project/api/entity"
 	"your-project/api/repository"
 )
 
 type UserInformationService struct {
-	repo repository.UserInformationRepositoryInt
+	repo repository.UserInformationRepository
 }
 
 // NewUserInformationService は新しいサービスを作成し、リポジトリを依存として注入します
-func NewUserInformationService(repo repository.UserInformationRepositoryInt) *UserInformationService {
+func NewUserInformationService(db *sql.DB) *UserInformationService {
+	repo := repository.NewUserInformationRepository(db)
 	return &UserInformationService{repo: repo}
 }
 

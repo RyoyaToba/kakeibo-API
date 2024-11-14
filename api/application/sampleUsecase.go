@@ -1,6 +1,4 @@
-// usecase/message.go
-
-package usecase
+package application
 
 import (
 	"errors"

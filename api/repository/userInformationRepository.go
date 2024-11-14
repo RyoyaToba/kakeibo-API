@@ -6,19 +6,19 @@ import (
 	"your-project/api/entity"
 )
 
-type UserInformationRepositoryInt interface {
+type UserInformationRepository interface {
 	GetUserInfo(userId string) (entity.UserInformation, error)
 }
 
-type UserInformationRepository struct {
+type userInformationRepository struct {
 	db *sql.DB
 }
 
-func NewUserInformationRepository(db *sql.DB) *UserInformationRepository {
-	return &UserInformationRepository{db: db}
+func NewUserInformationRepository(db *sql.DB) UserInformationRepository {
+	return &userInformationRepository{db: db}
 }
 
-func (repo *UserInformationRepository) GetUserInfo(userId string) (entity.UserInformation, error) {
+func (repo *userInformationRepository) GetUserInfo(userId string) (entity.UserInformation, error) {
 	var userInfo entity.UserInformation
 
 	err := repo.db.QueryRow(

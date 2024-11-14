@@ -1,8 +1,7 @@
-// usecase/message.go
-
-package usecase
+package application
 
 import (
+	"database/sql"
 	"your-project/api/entity"
 	"your-project/api/service"
 )
@@ -15,7 +14,8 @@ type UserInformationUsecaseImpl struct {
 	service *service.UserInformationService
 }
 
-func NewUserInformationUsecase(service *service.UserInformationService) *UserInformationUsecaseImpl {
+func NewUserInformationUsecase(db *sql.DB) *UserInformationUsecaseImpl {
+	service := service.NewUserInformationService(db)
 	return &UserInformationUsecaseImpl{service: service}
 }
 

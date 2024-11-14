@@ -27,7 +27,7 @@ func SetRouter(handlers *Handlers) *gin.Engine {
 	v1Routes := r.Group("/v1")
 	{
 		v1Routes.GET("/getUserInformation/:userId", handlers.UserInformationHandler.GetUserInfo)
-		v1Routes.GET("message/:id", handlers.MessageHandler.GetMessage) // 未使用
+		//v1Routes.GET("message/:id", handlers.MessageHandler.GetMessage) // 未使用
 	}
 
 	return r

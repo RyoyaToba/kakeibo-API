@@ -3,8 +3,9 @@
 package handler
 
 import (
-	"log"
+	"database/sql"
 	"net/http"
+	"your-project/api/application"
 	usecase "your-project/api/application"
 
 	"github.com/gin-gonic/gin"
@@ -16,14 +17,14 @@ type UserInformationHandler struct {
 }
 
 // NewMessageHandler は MessageHandler を初期化するコンストラクタ
-func NewUserInformationHandler(uc usecase.UserInformationUsecase) *UserInformationHandler {
-	return &UserInformationHandler{usecase: uc}
+func NewUserInformationHandler(db *sql.DB) *UserInformationHandler {
+	usecase := application.NewUserInformationUsecase(db)
+	return &UserInformationHandler{usecase: usecase}
 }
 
 // GetMessage は指定された ID のメッセージを取得するエンドポイント
 func (h *UserInformationHandler) GetUserInfo(c *gin.Context) {
 	userId := c.Param("userId")
-	log.Println("userId = ", userId)
 	userInformation, err := h.usecase.GetUserInfo(userId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
