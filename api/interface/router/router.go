@@ -8,8 +8,8 @@ import (
 
 // Handlers 構造体に、各エンドポイントのハンドラーをまとめる
 type Handlers struct {
-	UserInformationHandler *handler.UserInformationHandler
-	MessageHandler         *handler.MessageHandler
+	UserInformationHandler handler.UserInformationHandler
+	MessageHandler         handler.MessageHandler
 }
 
 // SetRouter はルーターを初期化し、エンドポイントを設定します。

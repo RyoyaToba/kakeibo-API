@@ -2,8 +2,11 @@ package main
 
 import (
 	"net/http"
+	usecase "your-project/api/application"
 	"your-project/api/interface/handler"
 	"your-project/api/interface/router"
+	"your-project/api/repository"
+	"your-project/api/service"
 	"your-project/infra"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -20,7 +23,10 @@ func main() {
 	defer db.Close()
 
 	//messageHandler := handler.NewMessageHandler(messageUsecase)
-	userInformationHandler := handler.NewUserInformationHandler(db)
+	ur := repository.NewUserInformationRepository(db)
+	us := service.NewUserInformationService(ur)
+	uc := usecase.NewUserInformationUsecase(us)
+	userInformationHandler := handler.NewUserInformationHandler(uc)
 
 	// Handlers構造体にハンドラーをまとめる
 	handlers := &router.Handlers{
