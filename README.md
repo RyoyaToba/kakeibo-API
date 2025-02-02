@@ -1,8 +1,8 @@
 ## Description
 
-このレポジトリでは[Golang](https://go.dev/)を利用したAPIの練習を行なっています. 
+[Golang](https://go.dev/)
 
-フレームワークは[Gin Framework](https://gin-gonic.com/ja/docs/)を利用しています.
+[Gin Framework](https://gin-gonic.com/ja/docs/)
 
 ## Tool
 
