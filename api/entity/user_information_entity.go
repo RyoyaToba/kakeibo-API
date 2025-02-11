@@ -1,16 +1,14 @@
 package entity
 
 import (
-	"database/sql"
 	"time"
 )
 
 type UserInformation struct {
-	UserId       string
-	SerialNumber int8
-	MailAddress  sql.NullString
-	CreatedBy    string
-	CreatedDate  time.Time
-	UpdatedBy    string
-	UpdatedDate  time.Time
+	UserId      string    `db:"user_id"`
+	MailAddress string    `db:"mail_address"`
+	CreatedBy   string    `db:"created_by"`
+	CreatedAt   time.Time `db:"created_at"`
+	UpdatedBy   string    `db:"updated_by"`
+	UpdatedAt   time.Time `db:"updated_at"`
 }

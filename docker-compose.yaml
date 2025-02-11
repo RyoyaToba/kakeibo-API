@@ -4,11 +4,13 @@ services:
   api:
     build:
       context: .
-      dockerfile: api/Dockerfile  # 新しいDockerfileのパス
+      dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - "8080:8080"
     depends_on:
       - mysql
+    env_file:
+      - .env
 
   mysql:
     build:
@@ -16,4 +18,25 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mysql-test:
+    image: mysql:8.0
+    platform: linux/arm64
+    container_name: test-mysql
+    ports:
+      - "3307:3306"  # 本番用と競合しないようにポートを変更
+    environment:
+      MYSQL_ROOT_PASSWORD: testpass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+  mysql_test_data:

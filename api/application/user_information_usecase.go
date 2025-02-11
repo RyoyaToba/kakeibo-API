@@ -1,12 +1,12 @@
 package application
 
 import (
-	"your-project/api/entity"
+	"your-project/api/response"
 	"your-project/api/service"
 )
 
 type UserInformationUsecase interface {
-	GetUserInfo(userId string) (entity.UserInformation, error)
+	GetUserInfo(userId string) (response.UserInformation, error)
 }
 
 type userInformationUsecase struct {
@@ -18,6 +18,15 @@ func NewUserInformationUsecase(su service.UserInformationService) UserInformatio
 }
 
 // GetMessage は指定された ID のメッセージを取得する
-func (uc userInformationUsecase) GetUserInfo(userId string) (entity.UserInformation, error) {
-	return uc.service.GetUserInfo(userId)
+func (uc userInformationUsecase) GetUserInfo(userId string) (response.UserInformation, error) {
+
+	user, err := uc.service.GetUserInfo(userId)
+	if err != nil {
+		return response.UserInformation{}, err
+	}
+
+	return response.UserInformation{
+		UserId:      user.UserId,
+		MailAddress: user.MailAddress,
+	}, nil
 }

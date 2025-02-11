@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS account_type_master (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by VARCHAR(255),
+    updated_at TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (id)
+);
