@@ -1,15 +1,15 @@
 openapi: 3.0.1
 info:
- title: sample-api
- description: golangサンプルAPI
+ title: kakeibo-api
+ description: golangを利用した家計簿API
  version: 1.0.0
 
 paths:
-  /v1/getmessage/{id}:
+  /v1/getUserInformation/{userID}:
     get:
-      summary: テストAPI
+      description: ユーザー情報取得
       parameters:
-        - name: id           # パラメータ名
+        - name: userID       # パラメータ名
           in: path           # パスパラメータとして指定
           required: true     # 必須パラメータ
           schema:
@@ -20,6 +20,11 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string # 配列の要素の型
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    example: 'test_user'
+                  mail_address:
+                    type: string
+                    example: 'sample@test.com'
