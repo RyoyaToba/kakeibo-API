@@ -1,37 +1,20 @@
 package mysql
 
 import (
-	"fmt"
+	"os"
 	"testing"
 	"your-project/api/entity"
 
+	"your-project/infra"
+
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 )
 
-const testDNS = "testuser:testpass@tcp(127.0.0.1:3307)/testdb?parseTime=true"
-
-func setupTestDB() (*sqlx.DB, error) {
-	db, err := sqlx.Open("mysql", testDNS)
-	if err != nil {
-		return nil, err
-	}
-
-	// 接続確認
-	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("DBへのPing失敗: %w", err)
-	}
-	return db, nil
-}
-
 func Test_GetUserInfo(t *testing.T) {
-	db, err := setupTestDB()
-	if err != nil {
-		t.Fatalf("DB接続エラー: %v", err)
-	}
-	db.Exec(`INSERT INTO user_information (user_id, mail_address, created_by, created_at, updated_by, updated_at)
-				VALUES ('test1', 'test@example.com', 'admin', NOW(), 'admin', NOW())`)
+	os.Setenv("GO_TEST_ENV", "true")
+	defer os.Setenv("GO_TEST_ENV", "false")
+	db := infra.SetupDB()
 	defer db.Close()
 
 	tests := map[string]struct {
@@ -40,6 +23,8 @@ func Test_GetUserInfo(t *testing.T) {
 	}{
 		"success": {
 			input: func() string {
+				db.Exec(`INSERT INTO user_information (user_id, mail_address, created_by, created_at, updated_by, updated_at)
+							VALUES ('test1', 'test@example.com', 'admin', NOW(), 'admin', NOW())`)
 				return "test1"
 			},
 			output: func(t *testing.T, ui *entity.UserInformation, err error) {

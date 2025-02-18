@@ -21,7 +21,7 @@ func NewUserInformationMySQL(db *sqlx.DB) UserInformationMySQL {
 }
 
 func (u userInformationMySQL) GetUserInfo(userID string) (*entity.UserInformation, error) {
-
+	// クエリを作成
 	query := strings.Join([]string{
 		"SELECT",
 		"	user_id,",
