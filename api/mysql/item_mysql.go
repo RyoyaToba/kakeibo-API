@@ -9,7 +9,7 @@ import (
 )
 
 type ItemMySQL interface {
-	GetItem(userID string) ([]*entity.Item, error)
+	GetItem(userID string, from string, to string) ([]*entity.Item, error)
 }
 
 type itemMySQL struct {
@@ -21,7 +21,7 @@ func NewItemMySQL(db *sqlx.DB) ItemMySQL {
 }
 
 // GetItem .
-func (im itemMySQL) GetItem(userID string) ([]*entity.Item, error) {
+func (im itemMySQL) GetItem(userID string, from string, to string) ([]*entity.Item, error) {
 	// クエリを作成
 	query := strings.Join([]string{
 		"SELECT",
@@ -40,10 +40,12 @@ func (im itemMySQL) GetItem(userID string) ([]*entity.Item, error) {
 		"	item",
 		"WHERE",
 		"	user_id = ? ",
+		"	AND target_date >= ? ",
+		"	AND target_date <= ? ",
 	}, " ")
 
 	var items []*entity.Item
-	err := im.db.Select(&items, query, userID)
+	err := im.db.Select(&items, query, userID, from, to)
 	if err != nil {
 		return nil, fmt.Errorf("データ取得エラー: %w", err)
 	}
