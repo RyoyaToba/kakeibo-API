@@ -32,6 +32,9 @@ docker-compose build --no-cache
 
 # docker up
 docker-compose up
+
+# build & start
+docker compose up --build -d
 ```
 
 ## Directory Structure
