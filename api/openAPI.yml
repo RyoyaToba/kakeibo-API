@@ -1,19 +1,19 @@
 openapi: 3.0.1
 info:
- title: kakeibo-api
- description: golangを利用した家計簿API
- version: 1.0.0
+  title: kakeibo-api
+  description: golangを利用した家計簿API
+  version: 1.0.0
 
 paths:
-  /v1/getUserInformation/{userID}:
+  /v1/getUserInformation/{userID}:  # userID をパスに含める
     get:
       description: ユーザー情報取得
       parameters:
-        - name: userID       # パラメータ名
-          in: path           # パスパラメータとして指定
-          required: true     # 必須パラメータ
+        - name: userID
+          in: path
+          required: true
           schema:
-            type: string     # パラメータの型
+            type: string
       responses:
         200:
           description: success operation
@@ -28,3 +28,45 @@ paths:
                   mail_address:
                     type: string
                     example: 'sample@test.com'
+
+  /v1/item:
+    get:
+      description: item情報を取得
+      parameters:
+        - name: from
+          in: query  # クエリパラメータに修正
+          required: true
+          schema:
+            type: string
+            format: date  # 日付フォーマット指定
+        - name: to
+          in: query  # クエリパラメータに修正
+          required: true
+          schema:
+            type: string
+            format: date  # 日付フォーマット指定
+      responses:
+        200:
+          description: success operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    example: 'test_user'
+                  items:
+                    type: array
+                    items:  # 配列の中身の型を定義
+                      type: object
+                      properties:
+                        item_id:
+                          type: string
+                          example: 'item_123'
+                        name:
+                          type: string
+                          example: 'りんご'
+                        price:
+                          type: integer
+                          example: 120
