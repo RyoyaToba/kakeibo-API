@@ -3,10 +3,12 @@ package application
 import (
 	"your-project/api/repository"
 	"your-project/api/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ItemUsecase interface {
-	Get(userID string) (*response.Item, error)
+	Get(ctx *gin.Context) (*response.ItemResponse, error)
 }
 
 type itemUsecase struct {
@@ -17,7 +19,32 @@ func NewItemUsecase(ir repository.ItemRepository) ItemUsecase {
 	return itemUsecase{ir}
 }
 
-func (iu itemUsecase) Get(userID string) (*response.Item, error) {
+func (iu itemUsecase) Get(ctx *gin.Context) (*response.ItemResponse, error) {
+	// パラメータの取得
+	from := ctx.Query("from")
+	to := ctx.Query("to")
+	userID := ctx.Query("userID")
 
-	return &response.Item{}, nil
+	// アイテム情報を取得
+	items, err := iu.ir.GetItem(userID, from, to)
+	if err != nil {
+		return nil, err
+	}
+
+	// レスポンス作成
+	itemList := make([]*response.Item, len(items))
+	for i, item := range items {
+		itemList[i] = &response.Item{
+			UserID:       userID,
+			ItemId:       item.ItemId,
+			Name:         item.Name,
+			Price:        item.Price,
+			TargetDate:   item.TargetDate,
+			CategoryId:   item.CategoryId,
+			BankSelectId: item.BankSelectId,
+		}
+	}
+	return &response.ItemResponse{
+		Items: itemList,
+	}, nil
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	usecase "your-project/api/application"
 	"your-project/api/interface/handler"
 	"your-project/api/interface/router"
@@ -19,17 +18,6 @@ func main() {
 	handlers := &router.Handlers{
 		UserInformationHandler: handler.NewUserInformationHandler(uu),
 		ItemHandler:            handler.NewItemHandler(iu),
-	}
-
-	// デバッグ用ログ
-	if handlers == nil {
-		log.Fatal("handlers is nil!")
-	}
-	if handlers.UserInformationHandler == nil {
-		log.Fatal("handlers.UserInformationHandler is nil!")
-	}
-	if handlers.ItemHandler == nil {
-		log.Fatal("handlers.ItemHandler is nil!")
 	}
 
 	// ルーターをセットアップ

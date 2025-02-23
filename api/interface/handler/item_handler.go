@@ -21,8 +21,7 @@ func NewItemHandler(iu usecase.ItemUsecase) ItemHandler {
 
 // GET
 func (ih itemHandler) Get(ctx *gin.Context) {
-	userID := ctx.Param("userID")
-	item, err := ih.usecase.Get(userID)
+	item, err := ih.usecase.Get(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
