@@ -10,6 +10,8 @@ import (
 
 type ItemMySQL interface {
 	GetItem(userID string, from string, to string) ([]*entity.Item, error)
+	Insert(tx *sqlx.Tx, userID string, item entity.Item) error
+	Update(tx *sqlx.Tx, userID string, item entity.Item) error
 }
 
 type itemMySQL struct {
@@ -51,4 +53,65 @@ func (im itemMySQL) GetItem(userID string, from string, to string) ([]*entity.It
 	}
 
 	return items, nil
+}
+
+// Insert .
+func (im itemMySQL) Insert(tx *sqlx.Tx, userID string, item entity.Item) error {
+	query := strings.Join([]string{
+		"INSERT INTO `item`(",
+		"	`user_id`, `name`, `price`, `target_date`, `category_id`, `bank_select_id`",
+		") VALUES (?, ?, ?, ?, ?, ?)",
+	}, " ")
+
+	stmp, err := tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmp.Close()
+	_, err = stmp.Exec(
+		userID,
+		item.Name,
+		item.Price,
+		item.TargetDate,
+		item.CategoryId,
+		item.BankSelectId,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Update .
+func (im itemMySQL) Update(tx *sqlx.Tx, userID string, item entity.Item) error {
+	query := strings.Join([]string{
+		"Update item SET (",
+		"	`name` = ? ",
+		"	`price` = ? ",
+		"	`target_date` = ? ",
+		"	`category_id` = ? ",
+		"	`bank_select_id` = ? ",
+		"	`updated_at` = NOW()",
+		"WHERE",
+		"	user_id = ? ",
+		"	AND item_id = ? ",
+	}, " ")
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		return nil
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(
+		item.Name,
+		item.Price,
+		item.TargetDate,
+		item.CategoryId,
+		item.BankSelectId,
+		userID,
+		item.ItemId,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }

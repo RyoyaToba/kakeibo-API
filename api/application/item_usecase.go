@@ -9,6 +9,8 @@ import (
 
 type ItemUsecase interface {
 	Get(ctx *gin.Context) (*response.ItemResponse, error)
+	Post(ctx *gin.Context) (*response.ItemResponse, error)
+	Put(ctx *gin.Context) (*response.ItemResponse, error)
 }
 
 type itemUsecase struct {
@@ -19,6 +21,7 @@ func NewItemUsecase(ir repository.ItemRepository) ItemUsecase {
 	return itemUsecase{ir}
 }
 
+// GET /v1/item
 func (iu itemUsecase) Get(ctx *gin.Context) (*response.ItemResponse, error) {
 	// パラメータの取得
 	from := ctx.Query("from")
@@ -47,4 +50,14 @@ func (iu itemUsecase) Get(ctx *gin.Context) (*response.ItemResponse, error) {
 	return &response.ItemResponse{
 		Items: itemList,
 	}, nil
+}
+
+// POST /v1/item
+func (iu itemUsecase) Post(ctx *gin.Context) (*response.ItemResponse, error) {
+	return nil, nil
+}
+
+// PUT /v1/item
+func (iu itemUsecase) Put(ctx *gin.Context) (*response.ItemResponse, error) {
+	return nil, nil
 }

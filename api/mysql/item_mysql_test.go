@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// GetItem .
 func Test_GetItem(t *testing.T) {
 	os.Setenv("GO_TEST_ENV", "true")
 	defer os.Setenv("GO_TEST_ENV", "false")
@@ -41,3 +42,44 @@ func Test_GetItem(t *testing.T) {
 	}
 	db.Exec("TRUNCATE TABLE item")
 }
+
+// Insert .
+func Test_Insert(t *testing.T) {
+	os.Setenv("GO_TEST_ENV", "true")
+	defer os.Setenv("GO_TEST_ENV", "false")
+	db := infra.SetupDB()
+	defer db.Close()
+
+	tests := map[string]struct {
+		input  func() (string, entity.Item)
+		output func(*testing.T, error)
+	}{
+		"success": {
+			input: func() (string, entity.Item) {
+				return "test", entity.Item{
+					UserId:       "test",
+					Name:         "家賃",
+					Price:        100000,
+					TargetDate:   "2025-02-23",
+					CategoryId:   1,
+					BankSelectId: 2,
+				}
+			},
+			output: func(t *testing.T, err error) {
+				assert.Nil(t, err)
+			},
+		},
+	}
+
+	e := NewItemMySQL(db)
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			userID, item := tt.input()
+			tx, _ := db.Beginx()
+			e.Insert(tx, userID, item)
+		})
+	}
+	db.Exec("TRANCATE TABLE item")
+}
+
+// TODO Upsert .
