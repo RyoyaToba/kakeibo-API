@@ -1,8 +1,10 @@
 package router
 
 import (
+	"time"
 	"your-project/api/interface/handler"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +18,15 @@ type Handlers struct {
 // SetRouter はルーターを初期化し、エンドポイントを設定します。
 func SetRouter(handlers *Handlers) *gin.Engine {
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // フロントエンドのURL
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// ヘルスチェック
 	r.GET("/v1/healthCheck", func(ctx *gin.Context) {

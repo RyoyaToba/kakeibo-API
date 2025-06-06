@@ -1,8 +1,8 @@
 package application
 
 import (
+	"your-project/api/repository"
 	"your-project/api/response"
-	"your-project/api/service"
 )
 
 type UserInformationUsecase interface {
@@ -10,17 +10,17 @@ type UserInformationUsecase interface {
 }
 
 type userInformationUsecase struct {
-	service service.UserInformationService
+	ur repository.UserInformationRepository
 }
 
-func NewUserInformationUsecase(su service.UserInformationService) UserInformationUsecase {
-	return userInformationUsecase{su}
+func NewUserInformationUsecase(ur repository.UserInformationRepository) UserInformationUsecase {
+	return userInformationUsecase{ur}
 }
 
 // GetMessage は指定された ID のメッセージを取得する
 func (uc userInformationUsecase) GetUserInfo(userId string) (response.UserInformation, error) {
 
-	user, err := uc.service.GetUserInfo(userId)
+	user, err := uc.ur.GetUserInfo(userId)
 	if err != nil {
 		return response.UserInformation{}, err
 	}

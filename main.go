@@ -5,13 +5,11 @@ import (
 	"your-project/api/interface/handler"
 	"your-project/api/interface/router"
 	"your-project/api/repository"
-	"your-project/api/service"
 )
 
 func main() {
 	ur := repository.NewUserInformationRepository()
-	us := service.NewUserInformationService(ur)
-	uu := usecase.NewUserInformationUsecase(us)
+	uu := usecase.NewUserInformationUsecase(ur)
 	ir := repository.NewItemRepository()
 	iu := usecase.NewItemUsecase(ir)
 	// ハンドラーをセットアップ
