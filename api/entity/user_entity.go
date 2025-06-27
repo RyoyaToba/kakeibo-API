@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type UserInformation struct {
+type UserEntity struct {
 	UserId      string    `db:"user_id"`
 	MailAddress string    `db:"mail_address"`
 	CreatedBy   string    `db:"created_by"`

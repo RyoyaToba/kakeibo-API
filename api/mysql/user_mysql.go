@@ -8,19 +8,19 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type UserInformationMySQL interface {
-	GetUserInfo(userID string) (*entity.UserInformation, error)
+type UserMySQL interface {
+	GetUserInfo(userID string) (*entity.UserEntity, error)
 }
 
-type userInformationMySQL struct {
+type userMySQL struct {
 	db *sqlx.DB
 }
 
-func NewUserInformationMySQL(db *sqlx.DB) UserInformationMySQL {
-	return &userInformationMySQL{db: db}
+func NewUserMySQL(db *sqlx.DB) UserMySQL {
+	return &userMySQL{db: db}
 }
 
-func (u userInformationMySQL) GetUserInfo(userID string) (*entity.UserInformation, error) {
+func (u userMySQL) GetUserInfo(userID string) (*entity.UserEntity, error) {
 	// クエリを作成
 	query := strings.Join([]string{
 		"SELECT",
@@ -36,7 +36,7 @@ func (u userInformationMySQL) GetUserInfo(userID string) (*entity.UserInformatio
 		"	user_id = ? ",
 	}, " ")
 
-	var user entity.UserInformation
+	var user entity.UserEntity
 	err := u.db.Get(&user, query, userID)
 	if err != nil {
 		return nil, fmt.Errorf("データ取得エラー: %w", err)

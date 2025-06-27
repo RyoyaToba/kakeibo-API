@@ -10,9 +10,9 @@ import (
 
 // Handlers 構造体に、各エンドポイントのハンドラーをまとめる
 type Handlers struct {
-	UserInformationHandler handler.UserInformationHandler
-	MessageHandler         handler.MessageHandler
-	ItemHandler            handler.ItemHandler
+	UserHandler    handler.UserHandler
+	MessageHandler handler.MessageHandler
+	ItemHandler    handler.ItemHandler
 }
 
 // SetRouter はルーターを初期化し、エンドポイントを設定します。
@@ -38,8 +38,8 @@ func SetRouter(handlers *Handlers) *gin.Engine {
 	// APIエンドポイント
 	v1Routes := r.Group("/v1")
 	{
-		// GET userInformation
-		v1Routes.GET("/getUserInformation/:userId", handlers.UserInformationHandler.GetUserInfo)
+		// GET user
+		v1Routes.GET("/getUserInformation/:userId", handlers.UserHandler.GetUserInfo)
 		// GET item
 		v1Routes.GET("/item", handlers.ItemHandler.Get)
 	}

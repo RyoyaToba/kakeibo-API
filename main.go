@@ -8,14 +8,14 @@ import (
 )
 
 func main() {
-	ur := repository.NewUserInformationRepository()
-	uu := usecase.NewUserInformationUsecase(ur)
+	ur := repository.NewUserRepository()
+	uu := usecase.NewUserUsecase(ur)
 	ir := repository.NewItemRepository()
 	iu := usecase.NewItemUsecase(ir)
 	// ハンドラーをセットアップ
 	handlers := &router.Handlers{
-		UserInformationHandler: handler.NewUserInformationHandler(uu),
-		ItemHandler:            handler.NewItemHandler(iu),
+		UserHandler: handler.NewUserHandler(uu),
+		ItemHandler: handler.NewItemHandler(iu),
 	}
 
 	// ルーターをセットアップ

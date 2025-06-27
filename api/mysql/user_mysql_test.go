@@ -19,7 +19,7 @@ func Test_GetUserInfo(t *testing.T) {
 
 	tests := map[string]struct {
 		input  func() string
-		output func(*testing.T, *entity.UserInformation, error)
+		output func(*testing.T, *entity.UserEntity, error)
 	}{
 		"success": {
 			input: func() string {
@@ -27,7 +27,7 @@ func Test_GetUserInfo(t *testing.T) {
 							VALUES ('test1', 'test@example.com', 'admin', NOW(), 'admin', NOW())`)
 				return "test1"
 			},
-			output: func(t *testing.T, ui *entity.UserInformation, err error) {
+			output: func(t *testing.T, ui *entity.UserEntity, err error) {
 				assert.Nil(t, err)
 				assert.Equal(t, "test1", ui.UserId)
 				assert.Equal(t, "test@example.com", ui.MailAddress)
@@ -35,7 +35,7 @@ func Test_GetUserInfo(t *testing.T) {
 		},
 	}
 
-	e := NewUserInformationMySQL(db)
+	e := NewUserMySQL(db)
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			userID := tt.input()
