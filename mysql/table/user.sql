@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS user_information (
+CREATE TABLE IF NOT EXISTS `user` (
     user_id VARCHAR(10) NOT NULL,
     mail_address VARCHAR(100) NOT NULL,
     created_by VARCHAR(255) NOT NULL,
