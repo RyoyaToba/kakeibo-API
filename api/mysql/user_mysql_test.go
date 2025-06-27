@@ -23,7 +23,7 @@ func Test_GetUserInfo(t *testing.T) {
 	}{
 		"success": {
 			input: func() string {
-				db.Exec(`INSERT INTO user_information (user_id, mail_address, created_by, created_at, updated_by, updated_at)
+				db.Exec(`INSERT INTO user (user_id, mail_address, created_by, created_at, updated_by, updated_at)
 							VALUES ('test1', 'test@example.com', 'admin', NOW(), 'admin', NOW())`)
 				return "test1"
 			},
@@ -43,6 +43,6 @@ func Test_GetUserInfo(t *testing.T) {
 			tt.output(t, userInfo, err)
 		})
 	}
-	db.Exec("TRUNCATE TABLE user_information")
+	db.Exec("TRUNCATE TABLE user")
 
 }

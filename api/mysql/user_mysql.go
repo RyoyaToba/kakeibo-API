@@ -31,7 +31,7 @@ func (u userMySQL) GetUserInfo(userID string) (*entity.UserEntity, error) {
 		"	updated_by,",
 		"	updated_at",
 		"FROM",
-		"	user_information",
+		"	user",
 		"WHERE",
 		"	user_id = ? ",
 	}, " ")
