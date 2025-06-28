@@ -40,8 +40,11 @@ func SetRouter(handlers *Handlers) *gin.Engine {
 	{
 		// GET user
 		v1Routes.GET("/getUserInformation/:userId", handlers.UserHandler.GetUserInfo)
+		// POST user
+		v1Routes.POST("/user", handlers.UserHandler.PostUser)
 		// GET item
 		v1Routes.GET("/item", handlers.ItemHandler.Get)
+
 	}
 
 	return r

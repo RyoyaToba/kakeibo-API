@@ -11,6 +11,7 @@ import (
 
 type UserHandler interface {
 	GetUserInfo(ctx *gin.Context)
+	PostUser(ctx *gin.Context)
 }
 
 type userHandler struct {
@@ -21,12 +22,21 @@ func NewUserHandler(uc usecase.UserUsecase) UserHandler {
 	return userHandler{uc}
 }
 
-func (uc userHandler) GetUserInfo(c *gin.Context) {
+func (u userHandler) GetUserInfo(c *gin.Context) {
 	userId := c.Param("userId")
-	user, err := uc.usecase.GetUser(userId)
+	user, err := u.usecase.GetUser(userId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"user": user})
+}
+
+func (u userHandler) PostUser(ctx *gin.Context) {
+	res, err := u.usecase.PostUser(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"res": res})
 }

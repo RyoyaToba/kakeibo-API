@@ -1,14 +1,18 @@
 package application
 
 import (
+	"errors"
 	"your-project/api/entity"
 	"your-project/api/repository"
+	"your-project/api/request"
 	"your-project/api/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserUsecase interface {
 	GetUser(userId string) (response.User, error)
-	PostUser(user *entity.UserEntity) error
+	PostUser(ctx *gin.Context) (*response.User, error)
 }
 
 type userUsecase struct {
@@ -34,6 +38,24 @@ func (uc *userUsecase) GetUser(userId string) (response.User, error) {
 }
 
 // [POST] /v1/user
-func (uc *userUsecase) PostUser(user *entity.UserEntity) error {
-	return nil
+func (uc *userUsecase) PostUser(ctx *gin.Context) (*response.User, error) {
+
+	// リクエストボディーの取得
+	req := request.PostUserBodyRequest{}
+	if err := req.Bind(ctx); err != nil {
+		return nil, errors.New("faild request_body bind")
+	}
+
+	err := uc.ur.InsertUser(entity.UserEntity{
+		UserId:      req.UserID,
+		MailAddress: *req.MailAddress,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.User{
+		UserId:      req.UserID,
+		MailAddress: *req.MailAddress,
+	}, nil
 }
