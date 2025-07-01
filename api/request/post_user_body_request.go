@@ -9,6 +9,7 @@ import (
 type PostUserBodyRequest struct {
 	UserID      string  `json:"user_id"`
 	MailAddress *string `json:"mail_address"`
+	Password    string  `json:"password"`
 }
 
 func (r *PostUserBodyRequest) Bind(ctx *gin.Context) error {

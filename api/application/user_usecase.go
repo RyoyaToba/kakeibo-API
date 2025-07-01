@@ -6,21 +6,24 @@ import (
 	"your-project/api/repository"
 	"your-project/api/request"
 	"your-project/api/response"
+	"your-project/infra"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
 type UserUsecase interface {
 	GetUser(userId string) (response.User, error)
-	PostUser(ctx *gin.Context) (*response.User, error)
+	PostUser(ctx *gin.Context) (*response.UserResponse, error)
 }
 
 type userUsecase struct {
 	ur repository.UserRepository
+	lr repository.LoginRepository
 }
 
-func NewUserUsecase(ur repository.UserRepository) UserUsecase {
-	return &userUsecase{ur}
+func NewUserUsecase(ur repository.UserRepository, lr repository.LoginRepository) UserUsecase {
+	return &userUsecase{ur, lr}
 }
 
 // [GET] /v1/user
@@ -38,7 +41,7 @@ func (uc *userUsecase) GetUser(userId string) (response.User, error) {
 }
 
 // [POST] /v1/user
-func (uc *userUsecase) PostUser(ctx *gin.Context) (*response.User, error) {
+func (u *userUsecase) PostUser(ctx *gin.Context) (*response.UserResponse, error) {
 
 	// リクエストボディーの取得
 	req := request.PostUserBodyRequest{}
@@ -46,16 +49,49 @@ func (uc *userUsecase) PostUser(ctx *gin.Context) (*response.User, error) {
 		return nil, errors.New("faild request_body bind")
 	}
 
-	err := uc.ur.InsertUser(entity.UserEntity{
-		UserId:      req.UserID,
-		MailAddress: *req.MailAddress,
+	// 既存ユーザーがいればエラーを返す
+	user, err := u.ur.GetUserInfo(req.UserID)
+	if err != nil {
+		return nil, err
+	}
+	if user != nil {
+		return nil, errors.New("This userID already used")
+	}
+
+	// ここにトランザクションを貼り、ログインデータ登録まで一連の処理にしたい
+	err = infra.Transaction(func(tx *sqlx.Tx) error {
+
+		// ユーザー登録
+		err := u.ur.InsertUser(tx, entity.UserEntity{
+			UserId:      req.UserID,
+			MailAddress: *req.MailAddress,
+		})
+		if err != nil {
+			return err
+		}
+
+		// ログイン情報
+		err = u.lr.InsertLogin(tx, entity.LoginEntity{
+			UserId:   req.UserID,
+			Password: req.Password,
+		})
+		if err != nil {
+			return err
+		}
+
+		return nil
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &response.User{
-		UserId:      req.UserID,
-		MailAddress: *req.MailAddress,
+	return &response.UserResponse{
+		User: response.User{
+			UserId:      req.UserID,
+			MailAddress: *req.MailAddress,
+		},
+		Login: response.Login{
+			Password: req.Password,
+		},
 	}, nil
 }
