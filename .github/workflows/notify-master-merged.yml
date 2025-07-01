@@ -1,0 +1,13 @@
+name: Notify on master update
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display merged message
+        run: echo "merged!"
