@@ -1,72 +1,146 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
-  title: kakeibo-api
-  description: golangを利用した家計簿API
+  title: Sample User and Item API
   version: 1.0.0
 
+servers:
+  - url: http://localhost:8080/v1
+
 paths:
-  /v1/getUserInformation/{userID}:  # userID をパスに含める
+  /getUserInformation/{userId}:
     get:
-      description: ユーザー情報取得
+      summary: Get user information
       parameters:
-        - name: userID
+        - name: userId
           in: path
           required: true
           schema:
             type: string
       responses:
-        200:
-          description: success operation
+        '200':
+          description: User info retrieved
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  user_id:
-                    type: string
-                    example: 'test_user'
-                  mail_address:
-                    type: string
-                    example: 'sample@test.com'
+                  user:
+                    $ref: '#/components/schemas/UserSimple'
 
-  /v1/item:
+  /user:
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '200':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  res:
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/UserSimple'
+                      login:
+                        type: object
+                        properties:
+                          password:
+                            type: string
+
+  /item:
     get:
-      description: item情報を取得
+      summary: Get items for user in date range
       parameters:
         - name: from
-          in: query  # クエリパラメータに修正
+          in: query
           required: true
           schema:
             type: string
-            format: date  # 日付フォーマット指定
+            format: date
         - name: to
-          in: query  # クエリパラメータに修正
+          in: query
           required: true
           schema:
             type: string
-            format: date  # 日付フォーマット指定
+            format: date
+        - name: userID
+          in: query
+          required: true
+          schema:
+            type: string
       responses:
-        200:
-          description: success operation
+        '200':
+          description: Items retrieved
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  user_id:
-                    type: string
-                    example: 'test_user'
-                  items:
-                    type: array
-                    items:  # 配列の中身の型を定義
-                      type: object
-                      properties:
-                        item_id:
-                          type: string
-                          example: 'item_123'
-                        name:
-                          type: string
-                          example: 'りんご'
-                        price:
-                          type: integer
-                          example: 120
+                  item:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Item'
+
+components:
+  schemas:
+    UserSimple:
+      type: object
+      properties:
+        user_id:
+          type: string
+        mail_address:
+          type: string
+      required:
+        - user_id
+        - mail_address
+
+    UserCreateRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+        mail_address:
+          type: string
+        password:
+          type: string
+      required:
+        - user_id
+        - mail_address
+        - password
+
+    Item:
+      type: object
+      properties:
+        user_id:
+          type: string
+        item_id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: integer
+        target_date:
+          type: string
+          format: date-time
+        category_id:
+          type: integer
+        bank_select_id:
+          type: integer
+      required:
+        - user_id
+        - item_id
+        - name
+        - price
+        - target_date
+        - category_id
